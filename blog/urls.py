@@ -24,6 +24,7 @@ from debug_toolbar import urls as debug_toolbar_urls
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("", include("blog_app.urls")),
+    path("users/", include("core.urls")),
 ]
 
 if settings.DEBUG:
