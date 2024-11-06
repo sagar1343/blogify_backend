@@ -43,7 +43,10 @@ class BlogDetailView(RetrieveUpdateDestroyAPIView):
 
 
 class CategoryView(ListCreateAPIView):
-    queryset = Category.objects.all().prefetch_related('blog_set').annotate(blog_count=Count('blog')).order_by('-blog_count')
+    queryset = (Category.objects.all()
+                .prefetch_related('blog_set')
+                .annotate(blog_count=Count('blog'))
+                .order_by('-blog_count'))
     serializer_class = CategorySerializer
     filter_backends = [filters.DjangoFilterBackend, SearchFilter]
     search_fields = ['title']
@@ -56,4 +59,3 @@ class CategoryView(ListCreateAPIView):
             'results': response.data
         }
         return Response(response_data, status=status.HTTP_200_OK)
-
