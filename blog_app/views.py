@@ -11,10 +11,10 @@ from .serializers import BlogSerializer, CategorySerializer
 
 
 class BlogView(ListCreateAPIView):
-    queryset = Blog.objects.all().select_related('category').order_by('title')
+    queryset = Blog.objects.all().select_related('category', 'author').order_by('-date')
     serializer_class = BlogSerializer
     filter_backends = [filters.DjangoFilterBackend, SearchFilter, OrderingFilter]
-    filterset_fields = ['author']
+    filterset_fields = ['author', 'category']
     search_fields = ['title']
     ordering_fields = ['title', 'read_by', 'date']
 

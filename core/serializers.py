@@ -1,29 +1,42 @@
+from django.contrib.auth import authenticate, get_user_model
+from djoser.serializers import UserCreateSerializer as BaseUserCreateSerializer, UserSerializer
 from rest_framework import serializers
+from rest_framework_simplejwt.tokens import RefreshToken
 
-from .models import User
+
+class UserCreateSerializer(BaseUserCreateSerializer):
+    class Meta(BaseUserCreateSerializer.Meta):
+        fields = ('first_name', 'last_name', 'profile_picture_url') + BaseUserCreateSerializer.Meta.fields
 
 
-class UserCreationSerializer(serializers.ModelSerializer):
-    confirmed_password = serializers.CharField(write_only=True)
+class TokenObtainSerializer(serializers.Serializer):
+    email = serializers.EmailField(write_only=True)
+    password = serializers.CharField(write_only=True, style={"input_type": "password"})
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+    def validate(self, attrs):
+        email = attrs.get("email")
+        password = attrs.get("password")
+        user = authenticate(request=self.context.get("request"), username=email, password=password)
+
+        if user is None:
+            user = get_user_model().objects.filter(email=email).first()
+            if user and not user.check_password(password):
+                raise serializers.ValidationError("Invalid credentials")
+
+        if user and user.is_active:
+            refresh = RefreshToken.for_user(user)
+            return {
+                "refresh": str(refresh),
+                "access": str(refresh.access_token),
+            }
+
+        raise serializers.ValidationError("Invalid credentials")
+
+
+class UserSerializer(serializers.ModelSerializer):
     class Meta:
-        model = User
-        fields = ['id', 'first_name', 'last_name', 'username', 'email', 'profile_picture_url', 'password',
-                  'confirmed_password']
-
-    def create(self, validated_data):
-        confirmed_password = validated_data.pop('confirmed_password', None)
-        if validated_data['password'] != confirmed_password:
-            raise serializers.ValidationError({"password": "Passwords do not match."})
-        user = User.objects.create_user(**validated_data)
-        user.set_password(validated_data['password'])
-        user.save()
-        return user
-
-
-class UserPatchSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = User
-        fields = ['id', 'first_name', 'last_name', 'username', 'email', 'profile_picture_url', 'password']
-        extra_kwargs = {'password': {'read_only': True}, 'email': {'read_only': True}}
-
+        model = get_user_model()
+        fields = ("id", "email", "username", "first_name", "last_name", "profile_picture_url")
