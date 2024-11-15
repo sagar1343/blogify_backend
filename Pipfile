@@ -12,9 +12,9 @@ django-filter = "*"
 django-cors-headers = "*"
 djoser = "*"
 drf-spectacular = "*"
-python-decouple = "*"
 pymysql = "*"
 gunicorn = "*"
+django-environ = "*"
 
 [dev-packages]
 
