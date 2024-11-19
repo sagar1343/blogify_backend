@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "ea5f734970a0ebe80339b640dab8d08abdf159a60ef4de0918f802710e23d190"
+            "sha256": "59876eb4ca7b67ed3ccc4ca913129ce662eba2839a32b332c7505314fbdf8966"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -292,15 +292,6 @@
             "markers": "python_version >= '3.8'",
             "version": "==4.4.6"
         },
-        "django-environ": {
-            "hashes": [
-                "sha256:0ff95ab4344bfeff693836aa978e6840abef2e2f1145adff7735892711590c05",
-                "sha256:f32a87aa0899894c27d4e1776fa6b477e8164ed7f6b3e410a62a6d72caaf64be"
-            ],
-            "index": "pypi",
-            "markers": "python_version >= '3.6' and python_version < '4'",
-            "version": "==0.11.2"
-        },
         "django-filter": {
             "hashes": [
                 "sha256:c4852822928ce17fb699bcfccd644b3574f1a2d80aeb2b4ff4f16b02dd49dc64",
@@ -413,11 +404,11 @@
         },
         "pyjwt": {
             "hashes": [
-                "sha256:3b02fb0f44517787776cf48f2ae25d8e14f300e6d7545a4315cee571a415e850",
-                "sha256:7e1e5b56cc735432a7369cbfa0efe50fa113ebecdc04ae6922deba8b84582d0c"
+                "sha256:543b77207db656de204372350926bed5a86201c4cbff159f623f79c7bb487a15",
+                "sha256:7628a7eb7938959ac1b26e819a1df0fd3259505627b575e4bad6d08f76db695c"
             ],
-            "markers": "python_version >= '3.8'",
-            "version": "==2.9.0"
+            "markers": "python_version >= '3.9'",
+            "version": "==2.10.0"
         },
         "pymysql": {
             "hashes": [
@@ -427,6 +418,14 @@
             "index": "pypi",
             "markers": "python_version >= '3.7'",
             "version": "==1.1.1"
+        },
+        "python-decouple": {
+            "hashes": [
+                "sha256:ba6e2657d4f376ecc46f77a3a615e058d93ba5e465c01bbe57289bfb7cce680f",
+                "sha256:d0d45340815b25f4de59c974b855bb38d03151d81b037d9e3f463b0c9f8cbd66"
+            ],
+            "index": "pypi",
+            "version": "==3.8"
         },
         "python3-openid": {
             "hashes": [

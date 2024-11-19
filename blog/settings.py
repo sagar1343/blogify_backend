@@ -9,14 +9,11 @@ https://docs.djangoproject.com/en/5.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
+import os.path
 
-import environ
+from decouple import config
 from pathlib import Path
 from datetime import timedelta
-from django.core.management.utils import get_random_secret_key
-
-env = environ.Env()
-environ.Env.read_env()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -25,15 +22,14 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = env("SECRET_KEY", default=get_random_secret_key)
+SECRET_KEY = config("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = env.bool("DEBUG", default=True)
+DEBUG = config("DEBUG", default=False, cast=bool)
 
-ALLOWED_HOSTS = env.list("ALLOWED_HOSTS", default=["127.0.0.1"])
+ALLOWED_HOSTS = config("ALLOWED_HOSTS", default='127.0.0.1', cast=lambda v: [s.strip() for s in v.split(',')])
 
 CORS_ALLOW_ALL_ORIGINS = True
-
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -94,11 +90,11 @@ pymysql.install_as_MySQLdb()
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.mysql",
-        "NAME": env("MYSQL_NAME"),
-        "USER": env("MYSQL_USER"),
-        "PASSWORD": env("MYSQL_PASSWORD"),
-        "HOST": env("MYSQL_HOST"),
-        "PORT": env("MYSQL_PORT"),
+        "NAME": config("MYSQL_NAME"),
+        "USER": config("MYSQL_USER"),
+        "PASSWORD": config("MYSQL_PASSWORD"),
+        "HOST": config("MYSQL_HOST"),
+        "PORT": config("MYSQL_PORT"),
     }
 }
 
@@ -141,7 +137,7 @@ STATIC_URL = "static/"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-INTERNAL_IPS = env.list("INTERNAL_IPS")
+INTERNAL_IPS = config("INTERNAL_IPS")
 
 REST_FRAMEWORK = {
     "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
@@ -154,6 +150,7 @@ REST_FRAMEWORK = {
 }
 
 SIMPLE_JWT = {
+    "SIGNING_KEY": config("SECRET_KEY"),
     "ACCESS_TOKEN_LIFETIME": timedelta(days=1),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=7),
     "AUTH_HEADER_TYPES": ("JWT",),

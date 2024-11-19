@@ -1,16 +1,18 @@
 from django.contrib.auth import authenticate, get_user_model
-from djoser.serializers import UserCreateSerializer as BaseUserCreateSerializer 
+from djoser.serializers import UserCreateSerializer as BaseUserCreateSerializer
 from rest_framework import serializers
 from rest_framework_simplejwt.tokens import RefreshToken
+
+from core.models import User
 
 
 class UserCreateSerializer(BaseUserCreateSerializer):
     class Meta(BaseUserCreateSerializer.Meta):
         fields = (
-            "first_name",
-            "last_name",
-            "profile_picture_url",
-        ) + BaseUserCreateSerializer.Meta.fields
+                     "first_name",
+                     "last_name",
+                     "profile_picture_url",
+                 ) + BaseUserCreateSerializer.Meta.fields
 
 
 class TokenObtainSerializer(serializers.Serializer):
@@ -23,23 +25,30 @@ class TokenObtainSerializer(serializers.Serializer):
     def validate(self, attrs):
         email = attrs.get("email")
         password = attrs.get("password")
-        user = authenticate(
-            request=self.context.get("request"), username=email, password=password
-        )
+
+        if not email or not password:
+            raise serializers.ValidationError("Email and password are required.")
+
+        user = get_user_model().objects.filter(email=email).first()
 
         if user is None:
-            user = get_user_model().objects.filter(email=email).first()
-            if user and not user.check_password(password):
-                raise serializers.ValidationError("Invalid credentials")
+            raise serializers.ValidationError("Invalid credentials")
 
-        if user and user.is_active:
-            refresh = RefreshToken.for_user(user)
-            return {
-                "refresh": str(refresh),
-                "access": str(refresh.access_token),  # type: ignore
-            }
+        user = authenticate(
+            request=self.context.get("request"),
+            username=user.username,
+            password=password
+        )
+        
+        if user is None or not user.is_active:
+            raise serializers.ValidationError("Invalid credentials")
 
-        raise serializers.ValidationError("Invalid credentials")
+        refresh = RefreshToken.for_user(user)
+        print(f"Refresh token: {refresh}")
+        return {
+            "refresh": str(refresh),
+            "access": str(refresh.access_token),
+        }
 
 
 class UserSerializer(serializers.ModelSerializer):

@@ -14,7 +14,7 @@ djoser = "*"
 drf-spectacular = "*"
 pymysql = "*"
 gunicorn = "*"
-django-environ = "*"
+python-decouple = "*"
 
 [dev-packages]
 
