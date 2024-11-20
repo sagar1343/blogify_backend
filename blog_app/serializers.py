@@ -20,24 +20,20 @@ class AuthorSerializer(serializers.ModelSerializer):
 
 class BlogSerializer(serializers.ModelSerializer):
     category = serializers.PrimaryKeyRelatedField(queryset=Category.objects.all())
-    author = serializers.SerializerMethodField()
 
     class Meta:
         model = Blog
         fields = ['id', 'title', 'description', 'content', 'category', 'read_by', 'date', 'author']
 
-    def get_author(self, obj):
-        request = self.context.get('request')
-        if request and request.method == 'GET':
-            serializer = AuthorSerializer(obj.author)
-            return serializer.data
-        return obj.author.id
-
     def to_representation(self, instance):
         representation = super().to_representation(instance)
 
+        if 'author' in representation:
+            author_instance = instance.author
+            representation['author'] = AuthorSerializer(author_instance).data
+
         if 'category' in representation:
             category_instance = instance.category
-            category_data = CategorySerializer(category_instance).data
-            representation['category'] = category_data
+            representation['category'] = CategorySerializer(category_instance).data
+
         return representation
