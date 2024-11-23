@@ -5,8 +5,10 @@ services:
     build:
       context: .
     container_name: blogify-backend
-    expose:
-      - "8000" 
+    ports:
+      - "8000:8000"  
+    command: ["gunicorn", "blog.wsgi:application", "--bind", "0.0.0.0:8000", "--timeout", "30"]
+    
 
   nginx:
     image: nginx:alpine
