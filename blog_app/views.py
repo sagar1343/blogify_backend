@@ -2,12 +2,12 @@ from django.db.models import Count
 from django_filters import rest_framework as filters
 from rest_framework import status
 from rest_framework.filters import SearchFilter, OrderingFilter
-from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
+from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView, ListAPIView
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 
 from .models import Blog, Category
-from .serializers import BlogSerializer, CategorySerializer
+from .serializers import BlogSerializer, CategorySerializer, UsersBlogSerializer
 
 
 class BlogView(ListCreateAPIView):
@@ -40,6 +40,15 @@ class BlogDetailView(RetrieveUpdateDestroyAPIView):
             return [AllowAny()]
         else:
             return [IsAuthenticated()]
+
+
+class UsersBlogView(ListAPIView):
+    serializer_class = UsersBlogSerializer
+    pagination_class = None
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        return Blog.objects.filter(author=self.request.user).only('title', 'read_by')
 
 
 class CategoryView(ListCreateAPIView):

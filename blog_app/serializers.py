@@ -37,3 +37,9 @@ class BlogSerializer(serializers.ModelSerializer):
             representation['category'] = CategorySerializer(category_instance).data
 
         return representation
+
+
+class UsersBlogSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Blog
+        fields = ['id', 'title', 'read_by']
