@@ -9,10 +9,10 @@ from core.models import User
 class UserCreateSerializer(BaseUserCreateSerializer):
     class Meta(BaseUserCreateSerializer.Meta):
         fields = (
-                     "first_name",
-                     "last_name",
-                     "profile_picture_url",
-                 ) + BaseUserCreateSerializer.Meta.fields
+            "first_name",
+            "last_name",
+            "profile_picture_url",
+        ) + BaseUserCreateSerializer.Meta.fields
 
 
 class TokenObtainSerializer(serializers.Serializer):
@@ -37,9 +37,9 @@ class TokenObtainSerializer(serializers.Serializer):
         user = authenticate(
             request=self.context.get("request"),
             username=user.username,
-            password=password
+            password=password,
         )
-        
+
         if user is None or not user.is_active:
             raise serializers.ValidationError("Invalid credentials")
 
