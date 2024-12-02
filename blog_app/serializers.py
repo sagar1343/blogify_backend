@@ -36,10 +36,9 @@ class BlogSerializer(serializers.ModelSerializer):
             "description",
             "content",
             "read_by",
-            "upvote",
             "date",
             "author",
-            "category",
+            "category"
         ]
 
     def to_representation(self, instance):

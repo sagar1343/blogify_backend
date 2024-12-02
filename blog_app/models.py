@@ -16,7 +16,6 @@ class Blog(models.Model):
     description = models.CharField(max_length=255)
     content = models.TextField()
     read_by = models.PositiveIntegerField(default=0, editable=False)
-    upvote = models.PositiveIntegerField(default=0, editable=False)
     category = models.ForeignKey(to=Category, on_delete=models.PROTECT)
     author = models.ForeignKey(to=settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
 
