@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     "blog_app",
     "core",
     "comments",
+    "upvote",
     "drf_spectacular",
 ]
 

@@ -23,8 +23,9 @@ from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView, Sp
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("blogs/", include("blog_app.urls")),
-    path("comments/", include("comments.urls")),
+    path("blogs/", include('blog_app.urls')),
+    path("comments/", include('comments.urls')),
+    path('upvote/', include('upvote.urls')),
     path('auth/', include('djoser.urls')),
     path('auth/', include('djoser.urls.jwt')),
     path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
